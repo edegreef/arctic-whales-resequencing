@@ -1,2 +1,2 @@
-# arctic_whales_resequencing
+# arctic-whales-resequencing
 Currently a working repository
