@@ -17,7 +17,7 @@ module load StdEnv/2020 samtools/1.12
 # Go to directory with final bam files
 cd /scratch/edegreef/whales/BOW_bam/dedupRG
 
-# Check modal coverage for all deDupRG.bam files in folder
+# Check modal coverage for all deDupRG.bam files in folder, using code from Phil Grayson for the bam_coverage.sh script (https://github.com/phil-grayson/SexFindR/blob/main/Step_1/samtools_Modaldepth.sh)
 for i in *deDupRG.bam
 do
 echo "Running bam_coverage: "$i        
