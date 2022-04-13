@@ -1,0 +1,32 @@
+# Notes on DifCover, comparing coverage of male and female bam files to identify sex-linked regions
+
+# Install DifCover
+git clone https://github.com/timnat/DifCover
+
+# Use "make" command in the "DifCover/dif_cover_scripts" folder and "chmod +x" for all the scripts in this folder
+
+# Install DNAcopy package into R
+R
+library(BiocManager)
+BiocManager::install("DNAcopy")
+
+# Make sure bedtools, samtools, awk, and R (DNAcopy package) are in PATH
+
+# Will need modal coverage for each bam file
+
+# Copy and edit 'run_difcover.sh' script in working directory, then run script
+# Example of parameters for one run; used 1/3 modal coverage for minimum, 3x modal coverage for maximum, and modal coverage sample2/ modal coverage sample1 as the AC value; the rest of parameters at default
+
+FOLDER_PATH=/home/degreefe/programs/DifCover/dif_cover_scripts
+
+BAM1='/home/degreefe/difcover/control/ARGF_07_1125_S43.deDupRG.bam'
+BAM2='/home/degreefe/difcover/control/ARIQ_DFO_11_1071_S11.deDupRG.bam'
+a=5		# minimum coverage for sample1
+A=48		# maximum coverage for sample1
+b=5		# minimum coverage for sample2
+B=48		# maximum coverage for sample2
+v=1000		# target number of valid bases in the window
+l=500		# minimum size of window to output
+AC=1	# Adjustment Coefficient (set 1 if modal coverage is equal) 
+p=2		# enrichment scores threshold (when p=2 will report regions with coverage in sample1 being roughly 4 times larger than coverage in sample2)
+bin=1		# for auxiliary stage (5), generates enrichment scores histogram with scores in bins with floating precision 1. For more detailed histogram use 10, 100
