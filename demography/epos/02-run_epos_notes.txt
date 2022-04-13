@@ -1,0 +1,15 @@
+# Notes on running EPOS for demographic history analyses.
+# Program downloaded from and following https://github.com/EvolBioInf/epos
+
+# with 0-class list, don't need sequence length parameter (-l)
+# already folded don't need -U
+# -u is muation rate
+
+# Run epos with 1000 bootstrap, using 2.69e-8 mutation rate
+/home/degreefe/programs/sfs/build/bootSfs -i 1000 BOW_frq.dat | /home/degreefe/programs/epos/build/epos -u 2.69e-8 | /home/degreefe/programs/epos2plot/cmd/epos2plot/epos2plot > BOW_frq_epos_boot.dat
+
+# Run epos without bootstrap, using 2.69e-8 mutation rate
+/home/degreefe/programs/epos/build/epos -u 2.69e-8 BOW_folded_SFS.txt | /home/degreefe/programs/epos2plot/cmd/epos2plot/epos2plot > BOW_frq_epos.dat
+
+# Same thing for Narwhal, but using 1.56e-8 for mutation rate
+
