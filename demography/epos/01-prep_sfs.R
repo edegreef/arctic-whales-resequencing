@@ -43,7 +43,7 @@ counts$min <- pmin(counts$ALLELE_COUNT1_NUM, counts$ALLELE_COUNT2_NUM)
 sfs <- as.data.frame(table(counts$min))
 
 # Save into as SFS file
-write.table(sfs, file="BOW_folded_SFS.txt", sep=" ", row.names=FALSE, col.names=FALSE, quote=FALSE)
+write.table(sfs, file="BOW_folded_SFS.txt", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 # Plot folded sfs as histogram/bar-plot
 ggplot(sfs, aes(y=Freq, x=Var1)) + 
