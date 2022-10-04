@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Map paired.fastq's to reference. This step takes a long time, example: ~5 days to make one 19GB bam file.
+# Map paired.fastq's to reference. This step takes a long time, example: ~5 days to make one 19GB bam file. I ran this in chunks, to make sure I don't max memory/space on biology cluster
 # Make sure reference genome is already indexed.
 
 cd /home/degreefe/whales/BOW_fastq_trimmed/part6
