@@ -16,7 +16,7 @@ vcf-query -l $snps.vcf.gz > vcf_sampleID
 # Shorten sample IDs by removing text up to the last "/"
 awk '{print $NF}' FS=/ vcf_sampleID > vcf_sampleID_shortened
 
-# I also want to remove last 4 characters in my sample ID (e.g. _S43 or something from sequencing lane), not related to sample ID
+# I also want to remove last 4 characters in my sample ID (e.g. _S43 or something from sequencing lane), not related to sample ID, be careful about this as this was very specific to my dataset labels. Can also manually do this if not many samples.
 sed 's/....$//' vcf_sampleID_shortened > vcf_sampleID_shortened2
 
 # Modify header in vcf file to change sample ID to the shortened ID list
