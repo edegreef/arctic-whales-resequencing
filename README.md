@@ -8,4 +8,22 @@ sequence_data_prep - steps from raw sequence fastq.gz files to snp vcf
 
 snps_prep - steps for snps filtering (including identifying sex-linked scaffolds to filter)
 
-demography - running smc++, epos, & psmc
+pop_structure
+- PCA
+- snmf
+- fst
+- roh
+
+demography - 
+- smc++
+- epos
+- psmc
+- gone
+
+adaptation -
+- imputation / snp prep
+- halplohh? - remember to jot Matt's name? and link vignette?
+- rehh_results 
+- magma - 
+- go term - 
+
