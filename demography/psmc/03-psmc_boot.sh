@@ -1,8 +1,10 @@
 #!/bin/bash
 
-cd /home/degreefe/whales/BOW_snps/psmc/bootstrap
-
+# bowhead
 sample=88_Pang
+
+# narwhal
+#sample=ARRB_99_1026
 
 # split psmcfa file for bootstrapping:
 /home/degreefe/programs/psmc/utils/splitfa $sample.psmcfa > $sample.split.psmcfa
