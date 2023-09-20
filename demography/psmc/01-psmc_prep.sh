@@ -19,13 +19,15 @@
 
 
 # Bowhead
-
 reference=/home/degreefe/whales/ref_genomes/BOW_reference.fasta
 list=scaf_min100kb 
 bam=88_Pang_S51.deDupRG.bam
 ID=88_Pang
 
+# Narwhal used sample ARRB_99_1026  and corresponding files. 
+
 # 88_Pang is 19x
+# ARRB_99_1026 is 21x
 
 # -d refers to min read depth (1/3 average depth) and -D to max (x2 average depth) .going with avg x9
 ## this loop takes maybe a day for this batch
