@@ -66,4 +66,11 @@ Steps to call and filter SNPs
 05. Extract genes within windows of candidate SNPs with *magma*
 06. Look at GO-term enrichment with *enrichr*
 
-
+### Gradient Forest [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/gradient_forest)
+* In progress
+1. Extract climate data with *sdmpredictors*
+2. Prepare SNPs additional filters, and then impute missing SNPs with *beagle*
+3. Thin SNPs and prepare for LEA program
+4. Run genome scan & lfmms to identify adaptive SNPs in *LEA*
+5. Run gradient forest analysis and calculate genetic offsets in *gradientForest*
+6. Additional plots: box plots and maps
