@@ -8,7 +8,7 @@ Steps to process raw reads (fastq.gz's) to prepare for SNP calling.
 02. Run fastqc on reads for quality check
 03. Merge fastqs if multiple lanes. Will note here that it's better to trim first before merging. In this case it didn't make a difference, but in future it's better practice to trim before merge in case of a bad sequencing lane or something.
 04. Trim fastqs with *Trimmomatic*
-05. Map reads to reference genome with *BWA*
+05. Map reads to reference genome with *BWA*. Two scripts here, one for compute canada (05cc) and one for biology cluster (05biol). Did it in parts/batches across both.
 06. Remove duplicate reads with *picard*
 07. Add read groups with *picard*
 08. Remove non-primary alignments with *samtools*
@@ -29,11 +29,11 @@ Steps to call and filter SNPs
 
 
 ### Population structure [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/pop_structure)
-empty rn **need to add in**
-* Principcal Component Analysis (PCA)
-* Admixture with sparse Non-Negative Matrix Factorization (sNMF)
-* Pairwise differentiation (Reich's Fst)
-* Runs of Homozygosity (ROH)
+Scripts for population structure analyses
+* Principcal Component Analysis (PCA) with *pcadapt*: analyzed and plotted with "PCA_pcadapt.R"
+* Admixture with sparse Non-Negative Matrix Factorization (sNMF) in *LEA*: analyzed with "SNMF_lea.R", then plotted admixture results in "admixture_plot.R"
+* Pairwise differentiation (Reich's Fst): estimated through "FST_Reich.R", then looked at isolation-by-distance with "map_distances_and_IBD.R"
+* Runs of Homozygosity (ROH) with *plink*: estimated with "ROH_tadj_pi.sh" then plotted in R with "ROH_tadj_pi_plot.R"
   
 ### Demographic history [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/demography)
 * PSMC:
