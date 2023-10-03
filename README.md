@@ -29,37 +29,35 @@ Steps to call and filter SNPs
 
 
 ### Population structure [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/pop_structure)
-Scripts for population structure analyses
 * Principcal Component Analysis (PCA) with *pcadapt*: analyzed and plotted with "PCA_pcadapt.R"
 * Admixture with sparse Non-Negative Matrix Factorization (sNMF) in *LEA*: analyzed with "SNMF_lea.R", then plotted admixture results in "admixture_plot.R"
 * Pairwise differentiation (Reich's Fst): estimated through "FST_Reich.R", then looked at isolation-by-distance with "map_distances_and_IBD.R"
 * Runs of Homozygosity (ROH) with *plink*: estimated with "ROH_tadj_pi.sh" then plotted in R with "ROH_tadj_pi_plot.R"
   
 ### Demographic history [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/demography)
-* PSMC:
+* *PSMC*:
   1. Prep files, including calling SNPs with high coverage bam files
   2. Run PSMC
   3. Run 100 bootstraps
   4. Plot through PSMC
-  5. Nicer plot in R **need to add this in**
-* SMC++:
+  5. Nicer plot in R
+* *SMC++*:
   1. Prep files for SMC++
   2. Run vcf2smc for each scaffold
   3. Run SMC++ estimate with 100 iterations
   4. Plot through SMC++
-  5. Nicer plot in R **need to add this in**
-* GONE:
+  5. Nicer plot (combined with PSMC) is in main demography folder
+* *GONE*:
   1. Prep files for GONE
   2. Run GONE
-  3. Plot GONE in R **need to add this in**
-* STRATG
+  3. Plot GONE in R
+* *strataG*
   1. Prep files for strataG
   2. Run ldNe function in strataG
-* EPOS - extra, exploratory
+* *EPOS* - extra, exploratory
   1. Prep SFS files
   2. Run epos
   3. Plot results in R
-* Merged plot code **need to add this in**???
 
 ### Adaptation [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/adaptation)
 empty rn
