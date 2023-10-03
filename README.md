@@ -60,11 +60,10 @@ Steps to call and filter SNPs
   3. Plot results in R
 
 ### Adaptation [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/adaptation)
-empty rn
-01. SNP prep?
-02. Impute missing SNPs with *beagle*
-03. happlohh stuff - remember to jott Matt's name and link vignette
-04. Looking at rehh results - again Matt's name and link vignette
+01. Prepare SNPs additional filters, and then impute missing SNPs with *beagle*
+02. Prepare haplohh file with *rehh*. Additional script to run R on linux.
+03. Look at ihs results and pull out candidate snps with *rehh*. Script includes plot.
+04. Prepare input files for next step (SNP and gene locations) 
 05. Extract genes within windows of candidate SNPs with *magma*
 06. Look at GO-term enrichment with *enrichr*
 
