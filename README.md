@@ -1,6 +1,5 @@
 # arctic-whales-resequencing
 
-Currently a working repository
 
 ### Sequencing data preparation [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/sequence_data_prep)
 Steps to process raw reads (fastq.gz's) to prepare for SNP calling.
