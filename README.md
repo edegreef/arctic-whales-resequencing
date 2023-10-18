@@ -1,5 +1,5 @@
 # arctic-whales-resequencing
-This is a repository for scripts used in analyzing narwhal (*Monodon monoceros*) and bowhead whale (*Balaena mysticetus*) resequencing data. These scripts were executed on computing resources through the University of Manitoba and the Digitial Research Alliance of Canada. 
+This is a repository for scripts used in analyzing Canadian Arctic narwhal (*Monodon monoceros*) and bowhead whale (*Balaena mysticetus*) resequencing data. These scripts were executed on computing resources through the University of Manitoba and the Digitial Research Alliance of Canada. 
 
 ### Sequencing data preparation [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/sequence_data_prep)
 Steps to process raw reads (fastq.gz's) to prepare for SNP calling.
