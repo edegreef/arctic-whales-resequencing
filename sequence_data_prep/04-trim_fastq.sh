@@ -31,4 +31,4 @@ module load nixpkgs/16.09 trimmomatic/0.36
 cd /scratch/edegreef/whales/BOW_fastq/merged
 
 # Run trimmomatic	
-ls ./*_R1_001.fastq.gz | sed 's/_R1_001.fastq.gz$//' | parallel 'java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.36.jar PE {}_R1_001.fastq.gz {}_R2_001.fastq.gz trimmed/{}_R1_paired.fastq.gz trimmed/{}_R1_unpaired.fastq.gz trimmed/{}_R2_paired.fastq.gz trimmed/{}_R2_unpaired.fastq.gz ILLUMINACLIP:/scratch/edegreef/whales/TruSeq3-PE-2.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36'
+ls ./*_R1_001.fastq.gz | sed 's/_R1_001.fastq.gz$//' | parallel --jobs $SLURM_CPUS_PER_TASK 'java -jar $EBROOTTRIMMOMATIC/trimmomatic-0.36.jar PE {}_R1_001.fastq.gz {}_R2_001.fastq.gz trimmed/{}_R1_paired.fastq.gz trimmed/{}_R1_unpaired.fastq.gz trimmed/{}_R2_paired.fastq.gz trimmed/{}_R2_unpaired.fastq.gz ILLUMINACLIP:/scratch/edegreef/whales/TruSeq3-PE-2.fa:2:30:10:2:keepBothReads LEADING:3 TRAILING:3 MINLEN:36'
