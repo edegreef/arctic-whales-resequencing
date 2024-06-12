@@ -5,7 +5,7 @@ This is a repository for scripts used in analyzing Canadian Arctic narwhal (*Mon
 Steps to process raw reads (fastq.gz's) to prepare for SNP calling.
 01. Index reference genomes and look at stats
 02. Run fastqc on reads for quality check
-03. Merge fastqs if multiple lanes. Will note here that it's better to trim first before merging. In this case it didn't make a difference, but in future it's better practice to trim before merge in case of a bad sequencing lane or something.
+03. Merge fastqs if multiple lanes. Will note here that it's better to trim first before merging. In this case it didn't make a difference, but in future it's better practice to trim before merge in case of a bad sequencing lane.
 04. Trim fastqs with *Trimmomatic*
 05. Map reads to reference genome with *BWA*. Two scripts here, one for compute canada (05cc) and one for biology cluster (05biol). Did it in parts/batches across both.
 06. Remove duplicate reads with *picard*
