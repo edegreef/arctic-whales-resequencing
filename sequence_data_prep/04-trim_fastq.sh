@@ -3,11 +3,10 @@
 #SBATCH --time=24:00:00
 #SBATCH --account=def-coling
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=edegreef@ucdavis.edu
+#SBATCH --mail-user=evelien.degreef@umanitoba.ca
 #SBATCH --nodes=1
 #SBATCH --mem=120G
 #SBATCH --cpus-per-task=32
-#SBATCH --kill-on-invalid=yes
 #SBATCH --job-name=trim_fastq
 #SBATCH --output=%x-%j.out
 
