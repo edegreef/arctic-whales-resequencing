@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # bowhead
-sample=88_Pang
+sample=88_Pang_S51.rightwhale
+#sample=BM_RB_2005_001_S43.rightwhale
 
 # narwhal
 #sample=ARRB_99_1026
