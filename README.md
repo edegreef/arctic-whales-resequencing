@@ -25,7 +25,8 @@ Steps to call and filter SNPs
 05. Look at DifCover results in R
 06. Annotate which windows are sex-linked and control using *bedtools*
 07. Finalize sex-linked scaffolds
-08. SNP filtering pipeline (includes removing indels, QUAL filter, MQ filter, QD filter, missingness, biallelic, removing small scaffolds, removing sex-linked scaffolds, HWE filter, MAF filter, LD pruning...)
+08. Removing fixed SNPs in bowhead whale (because mapped to a different species)
+09. SNP filtering pipeline (includes removing indels, QUAL filter, MQ filter, QD filter, missingness, biallelic, removing small scaffolds, removing sex-linked scaffolds, HWE filter, MAF filter, LD pruning...). Two separate scripts here for bowhead and narwhal because of slight difference in removing X and Y. The right whale genome used for the bowhead had X and Y chromosomes already identified.
 
 
 ### Population structure [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/pop_structure)
