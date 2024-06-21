@@ -3,7 +3,7 @@
 #SBATCH --time=48:00:00
 #SBATCH --account=def-coling
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=edegreef@ucdavis.edu
+#SBATCH --mail-user=evelien.degreef@umanitoba.ca
 #SBATCH --mem=35G
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name=bam_coverage
