@@ -3,9 +3,8 @@
 #SBATCH --time=12:00:00
 #SBATCH --account=def-coling
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=edegreef@ucdavis.edu
-#SBATCH --constraint=skylake
-#SBATCH --cpus-per-task=48
+#SBATCH --mail-user=evelien.degreef@umaniotba.ca
+#SBATCH --cpus-per-task=32
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --mem=0
