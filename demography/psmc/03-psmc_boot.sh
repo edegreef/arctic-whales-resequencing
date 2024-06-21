@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# bowhead
-sample=88_Pang
+sample=BM_RB_2005_001_S43.rightwhale
 
-# narwhal
-#sample=ARRB_99_1026
+cd BM_RB_2005_001/boot
 
 # split psmcfa file for bootstrapping:
 /home/degreefe/programs/psmc/utils/splitfa $sample.psmcfa > $sample.split.psmcfa
@@ -13,7 +11,7 @@ sample=88_Pang
 seq 100 | xargs -P 10 -i echo /home/degreefe/programs/psmc/psmc -N25 -t15 -r5 -b -p "4+25*2+4+6" -o round-{}.$sample.psmc $sample.split.psmcfa | sh
 
 # combine with main run
-cat /home/degreefe/whales/BOW_snps/psmc/$sample.N25.t15.r5.psmc round-*.$sample.psmc > combined.$sample.psmc
+cat $sample.N25.t15.r5.psmc round-*.$sample.psmc > combined.$sample.psmc
 
 # see if plotting works (and then use the all the plot.#.txt files to plot in R, there would be 100 files per sample)
 /home/degreefe/programs/psmc/utils/psmc_plot.pl -R -pY50000 combined combined.$sample.psmc
