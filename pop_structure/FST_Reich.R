@@ -1,6 +1,6 @@
 # Pairwise FST using Reich's unbiased estimate to handle unequal and small sample sizes. (from Reich et al. 2009: https://www.nature.com/articles/nature08365)
 
-# 1) Function code to create Reich.Fst from Gaetano et al. 2014: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0091237#s6, supplement: https://doi.org/10.1371/journal.pone.0091237.s002)
+# 1) Function code to create Reich.Fst from Di Gaetano et al. 2014: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0091237#s6, supplement: https://doi.org/10.1371/journal.pone.0091237.s002)
 
 Reich.Fst <- function(pop1,pop2,call.rate = 0.95, top.number = 10){
   # remove the SNPs that are not in common between the 2 populations
