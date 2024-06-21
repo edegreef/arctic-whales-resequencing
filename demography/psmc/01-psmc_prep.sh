@@ -19,15 +19,18 @@
 
 
 # Bowhead
-reference=/home/degreefe/whales/ref_genomes/BOW_reference.fasta
-list=scaf_min100kb 
-bam=88_Pang_S51.deDupRG.bam
-ID=88_Pang
+# Change ID for sample
+cd BM_RB_2005_001
 
-# Narwhal used sample ARRB_99_1026  and corresponding files. 
 
-# 88_Pang is 19x
-# ARRB_99_1026 is 21x
+reference=/home/degreefe/whales/ref_genomes/GCA_028564815.2_mEubGla1.1.hap2._XY_genomic.fna
+list=scaf_min100kb_RW_autosomes
+bam=BM_RB_2005_001_S43.rightwhale.deDupRG.pp.bam
+ID=BM_RB_2005_001_S43.rightwhale
+
+# 88_Pang is 18x
+# BM_RB_2005_001 is 19x
+
 
 # -d refers to min read depth (1/3 average depth) and -D to max (x2 average depth) .going with avg x9
 ## this loop takes maybe a day for this batch
@@ -42,7 +45,7 @@ cd prep
 cat $ID*.fq > $ID.consensus.fq
 
 # copy consensus file and go back to previous directory
-cp *consensus.fq /home/degreefe/whales/BOW_snps/psmc/
+cp *consensus.fq /home/degreefe/whales/bowhead/rightwhale_map/BM_RB_2005_001
 cd ..
 
 # convert fastq to input for PSMC
