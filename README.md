@@ -27,13 +27,15 @@ Steps to call and filter SNPs
 07. Finalize sex-linked scaffolds
 08. Removing fixed SNPs in bowhead whale (because mapped to a different species)
 09. SNP filtering pipeline (includes removing indels, QUAL filter, MQ filter, QD filter, missingness, biallelic, removing small scaffolds, removing sex-linked scaffolds, HWE filter, MAF filter, LD pruning...). Separate scripts here for bowhead and narwhal because of slight difference in removing X and Y. The right whale genome used for the bowhead had X and Y chromosomes already identified.
+10. A few extra SNP conversions and filter to prepare files into bfile format (bed/bim/fam), check kinships, and remove necessary samples, and then converting to map/ped format.
 
 
 ### Population structure [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/pop_structure)
 * Principcal Component Analysis (PCA) with *pcadapt*: analyzed and plotted with "PCA_pcadapt.R"
 * Admixture with sparse Non-Negative Matrix Factorization (sNMF) in *LEA*: analyzed with "SNMF_lea.R", then plotted admixture results in "admixture_plot.R"
 * Pairwise differentiation (Reich's Fst): estimated through "FST_Reich.R", then looked at isolation-by-distance with "map_distances_and_IBD.R"
-* Runs of Homozygosity (ROH) with *plink*: estimated with "ROH_tadj_pi.sh" then plotted in R with "ROH_tadj_pi_plot.R"
+* Proportion of observed heterozygosity estimated with "calculate_het.R" using output from vcftools
+* Runs of Homozygosity (ROH) with *plink*: estimated with "estimate_ROH.sh" then plotted in R with "plot_ROH.R"
   
 ### Demographic history [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/demography)
 * *PSMC*:
