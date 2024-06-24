@@ -4,7 +4,7 @@
 
 # Input reference genome fai path and ref genome prefix
 ref_genome_path=/home/degreefe/whales/ref_genomes/
-ref_genome=BOW_reference
+ref_genome=NAR_GCF_005190385.2
 
 # Make bed file for reference genome using the fasta.fai file
 bedtools makewindows -g $ref_genome_path/$ref_genome.fasta.fai -w 10000 > $ref_genome.10kb.bed
