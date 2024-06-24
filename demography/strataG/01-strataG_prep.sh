@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # example run on the command line:
-# ./strataG_prep_pipeline.sh narwhal_snps.filter1.miss.biallel.min100kb.autosomes.hwe.n57.RB
+# ./strataG_prep_pipeline.sh narwhal_snps.filter1.miss.biallel.min100kb.autosomes.hwe.RB.10MB
 
 # using vcfs that are already downsampled to population-level
 
