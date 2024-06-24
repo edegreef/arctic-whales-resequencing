@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# here just quick plots, but use the smcpp output files in R to make better plots
+# makes a quick plot and corresponding .csv file. Use the csv file in R to make a nicer plot
 
 source /home/edegreef/smcpp/bin/activate
 
