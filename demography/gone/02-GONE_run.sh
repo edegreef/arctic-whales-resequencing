@@ -5,6 +5,6 @@
 cd GONE_program
 
 # run the script_GONE.sh with parameter file (INPUT_PARAMETERS_FILE)
-./script_GONE.sh narwhal_snps.filter1.miss.biallel.min100kb.autosomes.hwe.maf.n57.scafrename
+./script_GONE.sh narwhal_snps.filter1.miss.biallel.min100kb.autosomes.hwe.WBB.10MB.scafrename
 
-# run bowhead one after narwhal is done & moved to separate folder
+# after run is done, move to separate folder and run for other narwhal subpops and bowhead
