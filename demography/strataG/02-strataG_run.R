@@ -1,17 +1,15 @@
-# Estimating Ne with strataG
+# Estimating NE
 
-# install strataG
 #devtools::install_github('ericarcher/strataG', build_vignettes = TRUE)
 
-# load libraries
 library(vcfR)
 library(adegenet)
 library(strataG)
 
-setwd("C:/Users/eveli/Dropbox/Whales with Garroway/strataG/narwhal")
+setwd("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/contemporary_Ne/strataG/narwhal")
 
-# load vcf 
-snpsR <- read.vcfR("narwhal_snps.filter1.miss.biallel.min100kb.autosomes.hwe.n57.n20.nomiss.maf05.thinned25K.set1.vcf", verbose = T)
+# load vcf
+snpsR <- read.vcfR("narwhal_snps.filter1.miss.biallel.min100kb.autosomes.hwe.n57.10MB.nomiss.thinned25K.set1.vcf", verbose = T)
 
 # convert vcf to genpop
 snps_genind <- vcfR2genind(snpsR)
@@ -30,9 +28,6 @@ Ne <- ldNe(snps_gtypes,
            num.cores=4)
 Ne
 
-# 25K snps over 16 samples took 4 minutes
-# 50K snps over 16 samples start 11:23- after 20 minutes crashed/slowed down computer too much
-
-
 # Save the results:
-write.csv(Ne, "NeResults.narhwal.n57.25K.set1.csv")
+write.csv(Ne, "NeResults.narwhal.n57.10MB.25K_nomaf.set1.csv")
+
