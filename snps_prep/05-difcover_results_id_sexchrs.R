@@ -4,15 +4,15 @@
 
 library(tidyverse)
 
-setwd("C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/BOW/difcover/control/M1F1")
+setwd("C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/NAR/difcover/control/M1F1")
 
 # Enter in file infos
-DNAcopyout ="M1_F1.ratio_per_w_CC0_a5_A45_b5_B48_v1000_l500.log2adj_1.067.DNAcopyout"
-scaffold_info="C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/BOW/difcover/BOW_reference.fasta.fai"
+DNAcopyout ="ARGF_07_1125_ARAB_08_1164.ratio_per_w_CC0_a5_A48_b5_B45_v1000_l500.log2adj_0.9375.DNAcopyout"
+scaffold_info="C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/NAR/difcover/NAR_GCF_005190385.2.scafname.fasta.fai"
 
 # Some more labels for later (plot title/label)
-sample1="M1"
-sample2="F1"
+sample1="ARGF_07_1125"
+sample2="ARAB_08_1164"
 type="M1F1"
 
 # Load in data, rename columns, and add bp spanned. Enrichment score: log2(sample1 coverage/sample2 coverage)
@@ -136,15 +136,15 @@ write.table(forbed_Y, paste("Y_linked_scafwindows.",sample1, "&", sample2, "_", 
 
 ######## Looking at same-sex control data (M1M2, F1F2):
 
-setwd("C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/BOW/difcover/control/F1F2")
+setwd("C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/NAR/difcover/control/F1F2")
 
 # Enter file infos
-DNAcopyout ="BM_NSA_2009_BM_NSA_2012.ratio_per_w_CC0_a5_A48_b5_B42_v1000_l500.log2adj_0.875.DNAcopyout"
-scaffold_info="C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/BOW/difcover/BOW_reference.fasta.fai"
+DNAcopyout ="ARAB_08_1164_ARBI_05_1092.ratio_per_w_CC0_a5_A45_b5_B45_v1000_l500.log2adj_1.DNAcopyout"
+scaffold_info="C:/Users/Evelien de Greef/Dropbox/Whales with Garroway/NAR/difcover/NAR_GCF_005190385.2.scafname.fasta.fai"
 
 # Some more labels for later (plot title/label)
-sample1="BM_NSA_2009_02"
-sample2="BM_NSA_2012_02"
+sample1="ARAB_08_1164"
+sample2="ARBI_05_1092"
 type="F1_F2"
 
 # Load in the raw data (including non-significant regions), renaming columns, and adding bp spanned
