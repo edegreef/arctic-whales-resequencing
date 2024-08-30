@@ -34,7 +34,8 @@ Steps to call and filter SNPs
 * Principcal Component Analysis (PCA) with *pcadapt*: analyzed and plotted with "PCA_pcadapt.R"
 * Admixture with sparse Non-Negative Matrix Factorization (sNMF) in *LEA*: analyzed with "SNMF_lea.R", then plotted admixture results in "admixture_plot.R"
 * Pairwise differentiation (Reich's Fst): estimated through "FST_Reich.R", then looked at isolation-by-distance with "map_distances_and_IBD.R"
-* Proportion of observed heterozygosity estimated with "calculate_het.R" using output from vcftools
+* Genome-wide proportion of observed heterozygossity estimated with *ANGSD* to include both multivariant and monomorphic sites. "angsd_heterozygosity_narwhal.sh" and "angsd_heterozygosity_bowhead.sh"
+* Proportion of observed heterozygosity estimated with "calculate_het.R" using output from vcftools. This method was done on SNPs and does not include monomorphic sites.
 * Runs of Homozygosity (ROH) with *plink*: estimated with "estimate_ROH.sh" then plotted in R with "plot_ROH.R"
   
 ### Demographic history [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/demography)
