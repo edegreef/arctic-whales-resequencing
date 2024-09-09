@@ -65,3 +65,12 @@ Steps to call and filter SNPs
   2. Run epos
   3. Plot results in R
 
+### Genetic offsets [:file_folder:](https://github.com/edegreef/arctic-whales-resequencing/tree/main/genetic_offsets)
+00. Map with combined species range shapefiles
+01. SNP filtering pipeline for narwhal and bowhead
+02. Impute with *beagle* and thing dataset with *vcftools*
+03. Extract climate data with *sdmpredictors*
+04. Run genoome scans and lfmm in *LEA*
+05. SNP prep and formating for Gradient Forest
+06. Pipeline for gradient forest analyses with *gradientForest*
+07. Combine genetic offsets for multiple species
