@@ -73,4 +73,4 @@ Steps to call and filter SNPs
 04. Run genoome scans and lfmm in *LEA*
 05. SNP prep and formating for Gradient Forest
 06. Pipeline for gradient forest analyses with *gradientForest*
-07. Combine genetic offsets for multiple species
+07. Combine genetic offsets
