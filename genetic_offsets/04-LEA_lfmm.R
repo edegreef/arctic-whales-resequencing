@@ -73,8 +73,8 @@ abline(h=1.86, col="red")
 
 
 # save list of snps - base genome scan, save top snps as .txt or .csv
-write_delim(snp_subset, "narwhal_K2.imputed.thin1000.top0.01logp.subset.txt")
-write.csv(snp_subset, "narwhal_K2.imputed.thin1000.top0.01logp.subset.csv", row.names = FALSE, quote=FALSE)
+write_delim(snp_subset, "narwhal_K3.imputed.thin1000.top0.01logp.subset.txt")
+write.csv(snp_subset, "narwhal_K3.imputed.thin1000.top0.01logp.subset.csv", row.names = FALSE, quote=FALSE)
 
 ########## PART 2: LFMM
 
