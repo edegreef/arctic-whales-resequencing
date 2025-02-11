@@ -25,8 +25,8 @@ project=snmf("narwhal_snps.PASS.minQ50.miss.biallel.min100kb.autosomes.n57.maf.m
 # Can also load snmf project if saved
 project=load.snmfProject("narwhal_snps.PASS.minQ50.miss.biallel.min100kb.autosomes.n57.maf.miss01.sm.imputed.thin1000.snmfProject")
 
-# Genome scan for selection: population differentiation tests. can't do this on K=1. Use the best K for the dataset. Here using K=2 for narwhal.
-p <- snmf.pvalues(project, entropy=TRUE, ploidy=2, K=2)
+# Genome scan for selection: population differentiation tests.
+p <- snmf.pvalues(project, entropy=TRUE, ploidy=2, K=3)
 pvalues <- p$pvalues
 
 # plot histogram of pvalues
@@ -78,8 +78,8 @@ write.csv(snp_subset, "narwhal_K2.imputed.thin1000.top0.01logp.subset.csv", row.
 
 ########## PART 2: LFMM
 
-# Select best run for K=2 from the snmf models
-best <- which.min(cross.entropy(project, K=2))
+# Select best run for K from the snmf models
+best <- which.min(cross.entropy(project, K=3))
 
 # reading in sample info - maybe don't need this??
 #sample_info <- read.csv("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current/narwhal/sample_info_narwhal_n57.csv", header=T)
@@ -96,7 +96,7 @@ lfmm_data <- "narwhal_snps.PASS.minQ50.miss.biallel.min100kb.autosomes.n57.maf.m
 lfmm_env <- "env files/narwhal_sst_100KM.env"
 
 # Run lfmm2 with selected K
-mod <- lfmm2(input=lfmm_data, env=lfmm_env, K=2)
+mod <- lfmm2(input=lfmm_data, env=lfmm_env, K=3)
 
 # GEA significance test? showing K=2 estimated factors
 #plot(mod@U, col = "grey", pch = 19, xlab = "Factor 1", ylab = "Factor 2")
@@ -146,7 +146,7 @@ plot(-log10(pv$pvalues), col="grey", cex=.4, pch=19, main="sst_100KM_present")
 setwd("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current/narwhal/LEA_narwhal_GF_rerun")
 
 # read in top0.01 snps from genome scan:
-scan <- read.csv("narwhal_K2.imputed.thin1000.top0.01logp.subset.csv")
+scan <- read.csv("narwhal_K3.imputed.thin1000.top0.01logp.subset.csv")
 
 # read in csv for lfmms (all snps, still need to filter top 1%) - code set up for doing this one at a time - maybe this part should've been set up in Part2
 #sst <- read.csv("narwhal_snps.PASS.minQ50.miss.biallel.min100kb.autosomes.n57.maf.miss01.sm.imputed.thin1000_sst_100KM.pvalues.csv")
@@ -184,7 +184,7 @@ snp_subset <- as.data.frame(snps_logp_order[1:top_count,])
 topsnps <- snp_subset
 
 # save it as csv too so dont have to redo later
-write.csv(topsnps, "narwhal_K2.imputed.thin1000.lfmm.chloro_100KM.top0.01logp.subset.csv")
+write.csv(topsnps, "narwhal_K3.imputed.thin1000.lfmm.chloro_100KM.top0.01logp.subset.csv")
 
 test <- snp_subset[order(snp_subset$order),]
 plot((test$logp), col = "grey", cex = .4, pch = 19, main="chloro_100KM_present")
@@ -193,18 +193,18 @@ plot((test$logp), col = "grey", cex = .4, pch = 19, main="chloro_100KM_present")
 # ok, now reload the top 0.01 snp sets
 
 # read in top0.01 snps from genome scan and envs
-scan <- read.csv("narwhal_K2.imputed.thin1000.top0.01logp.subset.csv")
-sst <- read.csv("narwhal_K2.imputed.thin1000.lfmm.sst_100KM.top0.01logp.subset.csv")
-icethick <- read.csv("narwhal_K2.imputed.thin1000.lfmm.icethick_100KM.top0.01logp.subset.csv")
-salinity <- read.csv("narwhal_K2.imputed.thin1000.lfmm.salinity_100KM.top0.01logp.subset.csv")
-chloro <- read.csv("narwhal_K2.imputed.thin1000.lfmm.chloro_100KM.top0.01logp.subset.csv")
+scan <- read.csv("narwhal_K3.imputed.thin1000.top0.01logp.subset.csv")
+sst <- read.csv("narwhal_K3.imputed.thin1000.lfmm.sst_100KM.top0.01logp.subset.csv")
+icethick <- read.csv("narwhal_K3.imputed.thin1000.lfmm.icethick_100KM.top0.01logp.subset.csv")
+salinity <- read.csv("narwhal_K3.imputed.thin1000.lfmm.salinity_100KM.top0.01logp.subset.csv")
+chloro <- read.csv("narwhal_K3.imputed.thin1000.lfmm.chloro_100KM.top0.01logp.subset.csv")
 # current velocity doesn't really change in 2050 or 2100, maybe no point to add this in? exclude for now
-#curvel <- read.csv("narwhal_K2.imputed.thin1000.lfmm.sst_100KM.top0.01logp.subset.csv")
+#curvel <- read.csv("narwhal_K3.imputed.thin1000.lfmm.sst_100KM.top0.01logp.subset.csv")
 
 
 #so 5 files with 10,523 snps each -> total of 52,615 SNPs
 
-# let's see how many overlap? and also make a nice snp list to extract from vcf later
+# But need to see how many overlap, and also make a nice snp list to extract from vcf later
 
 # just look at snp infos
 library(tidyverse)
@@ -218,14 +218,12 @@ chloro <- select(chloro, c(-X,-logp))
 merged <- rbind(scan, sst, icethick, salinity, chloro)
 merged_nodup <- merged[!duplicated(merged), ]
 
-# ok so we have a list of unique snps for filtering vcf, 47,242 snps.
-# we removed 5,373 snps that were in at least 2 things
-# not sure yet how we want to look at overlaps
-# anyway, continuing to map snp CHROM POS list for vcftools filtering
+# ok so we have a list of unique snps for filtering vcf, 47,508 snps.
+# map snp CHROM POS list for vcftools filtering
 
 merged_nodup_order <- merged_nodup[order(merged_nodup$order),]
 
 snp_list <- select(merged_nodup_order, -order)
 
-write_delim(snp_list, file="narwhal_top0.01_scan_4env_merged_snplist.txt", delim = "\t")
+write_delim(snp_list, file="narwhal_K3_top0.01_scan_4env_merged_snplist.txt", delim = "\t")
 
