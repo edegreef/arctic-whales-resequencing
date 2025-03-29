@@ -64,4 +64,4 @@ Steps to call and filter SNPs
   1. Prep SFS files
   2. Run epos
   3. Plot results in R
-  4. 
+  
