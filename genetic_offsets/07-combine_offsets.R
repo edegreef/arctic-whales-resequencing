@@ -12,13 +12,13 @@ library(tidyverse)
 library(climateStability) # for the raster scale 0 to 1 function
 library(RColorBrewer)
 
-setwd("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current-June2024")
+setwd("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current")
 
 #### Step 1) Scale and combine
 # Load offset rasters
-beluga_offset <- raster("beluga/raster.offset.RCP85.2100.beluga_K6.easternCanada.tif")
-narwhal_offset <- raster("narwhal/raster.offset.RCP85.2100.narwhal.easternCanada.tif")
-bowhead_offset <- raster("bowhead/raster.offset.RCP85.2100.bowhead.easternCanada.tif")
+beluga_offset <- raster("beluga/results_within_range/raster.offset.RCP85.2100.beluga.easternCanada.RANGECLIP.tif")
+narwhal_offset <- raster("narwhal/results_within_range/raster.offset.RCP85.2100.narwhal.easternCanada.RANGECLIP.tif")
+bowhead_offset <- raster("bowhead/results_within_range/raster.offset.RCP85.2100.bowhead.easternCanada.RANGECLIP.tif")
 
 # Set color scale
 offset.colors = colorRampPalette(c("#4575B4", "#abd9e9","#ffffbf","#fdae61","#f46d43","#a50026"))
@@ -62,21 +62,21 @@ crop.extent <- extent(-110,-45, 44, 80)
 map_outline <- crop(map_outline, y=crop.extent) %>% fortify()
 
 # Nice map showing sum of the 3 species
-svglite("combined_all3sp_GF_GeneticOffset_RCP85_2100_landmap_stepsn_SCALED_updatedBelK6_scalefunctSDs.svg", width=6, height=6)
+svglite("combined_all3sp_GF_GeneticOffset_RCP85_2100_landmap_stepsn_SCALED_updatedBelK6_scalefunctSDs_RANGECLIP_noscalebar.svg", width=6, height=6)
 ggplot()+
   geom_spatraster(data=combined_offset_scaled)+
   geom_polygon(data=map_outline, aes(x=long, y=lat, group=group), fill="gray80", colour="gray50", linewidth=0.2)+
-  scale_fill_stepsn(n.breaks = 20, colours = offset.colors(12))+#, limits=grad_lims)+
+  scale_fill_stepsn(n.breaks = 20, colours = offset.colors(12), na.value="white")+#, limits=grad_lims)+
   scale_x_continuous(expand=c(0,0), breaks=c(-100,-80,-60)) +
   scale_y_continuous(expand=c(0,0), breaks=c(50,60,70,80)) +
   xlab("Longitude")+
   ylab("Latitude")+
   labs(fill="Genetic offset")+
   theme(panel.border = element_rect(color = "black", fill = NA, size = 0.5))+
-  annotation_scale(height=unit(0.15, "cm"), location="tr", aes(width_hint=0.15), text_cex=0.8)+
+  # annotation_scale(height=unit(0.15, "cm"), location="tr", aes(width_hint=0.15), text_cex=0.8)+
   annotation_north_arrow(height = unit(1, "cm"),width = unit(1, "cm"),
                          location = "tr", which_north = "true",
-                         pad_x = unit(0.12, "cm"), pad_y = unit(0.6, "cm"),
+                         pad_x = unit(0.12, "cm"), pad_y = unit(0.3, "cm"), #pad_y unit 0.6 if including scale bar
                          style = ggspatial::north_arrow_fancy_orienteering())+
   theme(text=element_text(size=15))+
   theme(legend.title = element_text( size=12), legend.text=element_text(size=12))
@@ -144,10 +144,10 @@ bow_clamp <- ggplot()+
   ylab("Latitude")+
   labs(fill="Genetic offset")+
   theme(panel.border = element_rect(color = "black", fill = NA, size = 0.5), panel.background = element_blank())+
-  annotation_scale(height=unit(0.15, "cm"), location="tr", aes(width_hint=0.15), text_cex=0.8)+
+ # annotation_scale(height=unit(0.15, "cm"), location="tr", aes(width_hint=0.15), text_cex=0.8)+
   annotation_north_arrow(height = unit(1, "cm"),width = unit(1, "cm"),
                          location = "tr", which_north = "true",
-                         pad_x = unit(0.12, "cm"), pad_y = unit(0.6, "cm"),
+                         pad_x = unit(0.12, "cm"), pad_y = unit(0.3, "cm"),
                          style = ggspatial::north_arrow_fancy_orienteering())
 
 # Plot together
