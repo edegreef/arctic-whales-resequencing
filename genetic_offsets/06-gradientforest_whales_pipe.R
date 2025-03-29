@@ -40,8 +40,9 @@ library(reshape2)
 # Step 1: Initial run with gradient forest on present data
 # Step 2: Create plots for biological space and geographical space
 # Step 3: Measuring genetic offset with future data
+# Step 4: Create box plots
 
-setwd("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current-June2024")
+setwd("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current")
 
 ##########  
 ##### Step 1: Initial run with gradient forest on present data
@@ -52,17 +53,17 @@ setwd("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_for
 #snp <- read.table("narwhal_snps_nodup.filteredJul2024_shortfilename_K3_top0.01_scan_4env.forR", header=T, row.names=1)
 
 # use fread() for faster upload
-snp_temp <- fread("narwhal_snps_nodup.filteredJul2024_shortfilename_K3_top0.01_scan_4env.forR", header=T)
+snp_temp <- fread("bowhead/bowhead_RWmap_snps_rmfix_noNEW.PASS.minQ50.miss.biallel.min100kb.autosomes.n19.maf.miss01.imputed.thin1000.forR", header=T)
 snp_temp <- as.data.frame(snp_temp)
 snp <- snp_temp[,-1]
 rownames(snp) <- snp_temp[,1]
 
 
 # Load environmental data for each site --update this file for each individual
-site.clim.dat <- read.csv("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current-June2024/climate_data/sample_info_narwhal_with_climdat_100KM.csv")
+site.clim.dat <- read.csv("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current/climate_data/sample_info_bowhead_with_climdat_100KM.csv")
 colnames(site.clim.dat)
 
-# make sure ID orders match between sample info and individuals in the snp file!
+# mMake sure ID orders match between sample info and individuals in the snp file!
 # Extract sample_ID and location_ID
 sample_info <- site.clim.dat[,c("sample_ID", "location_ID")]
 
@@ -83,7 +84,7 @@ pres.clim.points <- sample_clim[c("Lon", "Lat", "sst","icethick", "salinity", "c
 coord <- pres.clim.points[,c('Lon','Lat')]
 #pcnm <- pcnm(dist(coord))  # if using linear
 
-######## Adding in marmap distances
+### Adding in marmap distances
 
 # Download ocean depth map. Lower resolution number is more fine-scale.
 ocean_map <- getNOAA.bathy(lon1 = -105, lon2 = -50, lat1 = 55, lat2 = 85, resolution = 5)
@@ -93,12 +94,44 @@ dist <- lc.dist(trans,coord,res="dist")
 dist.mat <- as.matrix(dist)
 pcnm <- pcnm(dist.mat)
 
-########
+###
 
-# Keep half of positive ones
+# Keep half of positive pcnms
 keep <- round(length(which(pcnm$value > 0))/2) 
 pcnm.keep <- scores(pcnm)[,1:keep]
 pcnm.keep
+
+# Plot the PCNM data
+
+# add coord and pcnm.keep together
+pcnm.for.plot <- cbind(coord, pcnm.keep)
+map_outline <- getMap(resolution="high")
+
+crop.extent <- extent(-110,-45, 44, 80) #eastern Canadian Arctic for all three sp
+
+# Crop outline to boundary and convert to dataframe
+map_outline <- crop(map_outline, y=crop.extent) %>% fortify()
+
+# Plot PCNMs on map- have to go one at a time here (adjust the "PCNM#")
+ggplot()+
+  geom_polygon(data=map_outline, aes(x=long, y=lat, group=group), fill="gray80", colour="gray50", linewidth=0.2)+
+  geom_point(data=pcnm.for.plot, aes(x=x, y=y, fill=PCNM4), shape=21, stroke=0.7,color="black",size=abs(20*pcnm.for.plot$PCNM4))+
+  scale_fill_gradient2(low = "#4575B4", mid = "#FFFFBF", high = "#D73027")+
+  scale_x_continuous(expand=c(0,0), breaks=c(-100,-80,-60)) +
+  scale_y_continuous(expand=c(0,0), breaks=c(50,60,70,80)) +
+  xlab("Longitude")+
+  ylab("Latitude")+
+  theme(panel.border = element_rect(color = "black", fill = NA, size = 0.5),
+        plot.title = element_text(hjust = 0.5))+
+  annotation_scale(height=unit(0.15, "cm"), location="tr", aes(width_hint=0.15), text_cex=0.8)+
+  annotation_north_arrow(height = unit(1, "cm"),width = unit(1, "cm"),
+                         location = "tr", which_north = "true",
+                         pad_x = unit(0.12, "cm"), pad_y = unit(0.6, "cm"),
+                         style = ggspatial::north_arrow_fancy_orienteering())+
+  theme_classic()+
+  theme(text=element_text(size=15),legend.title = element_text( size=12), legend.text=element_text(size=12), panel.border=element_rect(colour="black", fill=NA))
+ggsave("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current/narwhal/pcnms/narwhal_pcnm4.png", width=4.5, height=4, dpi=400)
+
 
 # Create file with climate and PCNM variables (no lat/long)
 env.gf <- cbind(pres.clim.points[,c("sst", "icethick", "salinity", "chloro")], pcnm.keep)
@@ -129,8 +162,8 @@ gf <- gradientForest(cbind(env.gf, snp),
 ## 1.3 Initial gradient forest plots
 # tip: use help(par) to see all the plotting options for color, size, etc
 
-# bar graphs of predictor overall variable importance
-# chose colors to highlight PCNMs and known environmental variables separately (orange for PCNM, blue for variables)
+# Bar graphs of predictor overall variable importance
+# Chose colors to highlight PCNMs and known environmental variables separately (orange for PCNM, blue for variables)
 # for narwhal
 plot(gf, plot.type = "O", col=c("#80ace1","#80ace1","#80ace1","#80ace1","#f6a565", "#f6a565","#f6a565","#f6a565"), lwd=1.5, cex.axis=0.9)
 
@@ -176,10 +209,11 @@ plot(gf, plot.type="P", show.names=T, horizontal=F, cex.axis=1, cex.labels=0.7, 
 # Note: instead of re-loading the layers from online with sdmpredictors every time I run this during load_layers(), I  downloaded and saved the rasters into a local directory so can load faster from there
 
 # example:
-#data.rasters <- load_layers(future.vars, datadir="C:/Users/eveli/Dropbox/Whales with Garroway/narwhal/gradientforest/clim_data/")
+#options(timeout=600) # set timeout limit to 10 min
+#data.rasters <- load_layers(present.vars, datadir="C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current/climate_rasters")
 
 # Then set the datadir for sdmpredictors to find the downloaded rasters
-options(sdmpredictors_datadir="C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current-June2024/climate_rasters")
+options(sdmpredictors_datadir="C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current/climate_rasters")
 
 # Names of present variables of interest
 present.vars <- c("BO22_tempmean_ss",
@@ -188,12 +222,12 @@ present.vars <- c("BO22_tempmean_ss",
                   "BO22_chlomean_ss")
 
 # Can load future vars now too though won't use it until later
-future.vars <- c("BO22_RCP60_2100_tempmean_ss",
-                 "BO22_RCP60_2100_icethickmean_ss",
-                 "BO22_RCP60_2100_salinitymean_ss") 
-future.vars.chlo <- c("BO22_RCP60_2100_chlomean_ss") #duno why future chlorophyll data extent is different, so have to load separately
+future.vars <- c("BO22_RCP85_2100_tempmean_ss",
+                 "BO22_RCP85_2100_icethickmean_ss",
+                 "BO22_RCP85_2100_salinitymean_ss") 
+future.vars.chlo <- c("BO22_RCP85_2100_chlomean_ss") #duno why future chlorophyll data extent is different, so have to load separately
 
-# Options: RCP26, RCP45, RCP60, RCP85: Going to do for RCP60, RCP85
+# Options: RCP26, RCP45, RCP60, RCP85: Going to do for RCP45, RCP60, RCP85
 
 # Load rasters
 present.rasters <- load_layers(present.vars)
@@ -202,7 +236,6 @@ future.rasters.chlo <- load_layers(future.vars.chlo)
 
 # Define boundary/extent/crop
 crop.extent <- extent(-110,-45, 44, 80) #eastern Canadian Arctic for all three sp
-#crop.extent <- extent(-180,180, 40, 90) #for species' specific range
 
 present.rasters.crop <- crop(present.rasters, crop.extent)
 future.rasters.nochlo.crop <- crop(future.rasters.nochlo, crop.extent)
@@ -217,7 +250,7 @@ names(future.rasters.crop) <- c("sst", "icethick", "salinity", "chloro")
 
 ## 2.2 Crop to desired area, using species' range here
 # Load range shapefile (obtained from IUCN red list database)
-#species <- read_sf('C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/maps/range_maps/redlist_species_data_narwhal/data_0.shp')
+species <- read_sf('C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/maps/range_maps/redlist_species_data_narwhal/data_0.shp')
 
 # Plot for fun, maybe use for a supplemental figure
 my.colors = colorRampPalette(c("#5E85B8","#EDF0C0","#C13127"))
@@ -225,11 +258,11 @@ plot(present.rasters.crop,col=my.colors(200))#,axes=FALSE, box=FALSE)
 plot(future.rasters.crop,col=my.colors(200)) 
 
 # Crop to species range shape file
-#present.rasters.range <- mask(crop.map.pres, species)
-#future.rasters.range <- mask(crop.map.fut, species)
+present.rasters.range <- mask(present.rasters.crop, species)
+future.rasters.range <- mask(future.rasters.crop, species)
 
-#crop.map2 <- crop(future.rasters,crop.extent)
-#future.rasters.range <- mask(crop.map2, species)
+crop.map2 <- crop(future.rasters.crop,crop.extent)
+future.rasters.range <- mask(crop.map2, species)
 
 #plot(present.rasters.range,col=my.colors(1000),axes=FALSE, box=FALSE)
 #plot(future.rasters.range,col=my.colors(1000),axes=FALSE, box=FALSE)
@@ -241,8 +274,8 @@ plot(future.rasters.crop,col=my.colors(200))
 #colnames(r.points) <- c("Lon", "Lat", "sst","icethick", "salinity", "chloro")
 
 ## 2.3 Extract climate data from rasters and transform environmental predictors
-# start with present data
-clim.land <- raster::extract(present.rasters.crop, 1:ncell(present.rasters.crop), df = TRUE)
+# start with present data (present.raster.crop for non-range specific, and present.rasters.range for range-specific)
+clim.land <- raster::extract(present.rasters.range, 1:ncell(present.rasters.range), df = TRUE)
 clim.land <- na.omit(clim.land)
 
 # Use predict function to transform environmental predictors
@@ -279,27 +312,32 @@ rgb.rast <- stack(rastR, rastG, rastB)
 # Read in beluga coords
 coord <- read.csv("beluga/beluga_coords_n140.csv")
 pres.clim.points <- coord
+
 # also site by location for later too
 site <- readxl::read_xlsx("beluga/Sites_beluga_popinfo.xlsx")
 
 ## redo site load for narwhal/bowhead
 sites <- read.csv("climate_data/site_locations.csv")
+
+# narwhal
 sites <- subset(sites, Narwhal > 0)
 names(sites)[names(sites) == 'narwhal_pop'] <- 'Population'
 
+# bowhead
 sites <- subset(sites, Bowhead > 0)
 sites$Population <- "ECA"
 
 ######
+#####
 
 #pdf("bowhead_RWmap_GF_Map.pdf")
-svglite("beluga/beluga_K6_GF_Map_updated.svg", width=6, height=6)
+svglite("beluga/results_within_range/beluga_GF_Map_updated_rangeclip.svg", width=6, height=6)
 # initial map/plot
 plotRGB(rgb.rast, colNA="gray80")
 points(pres.clim.points$Lon, pres.clim.points$Lat, pch=19, col="black")
 dev.off()
 
-# Pca thing
+# PCA legend of biological space
 nvs <- dim(pca$rotation)[1]
 vec <- c("sst", "icethick", "salinity", "chloro")
 lv <- length(vec)
@@ -308,7 +346,7 @@ scal <- 40
 xrng <- range(pca$x[, 1], pca$rotation[, 1]/scal) * 1.1
 yrng <- range(pca$x[, 2], pca$rotation[, 2]/scal) * 1.1
 
-svglite("beluga/beluga_K6_GF_Map_PCA_legend.svg", width=6, height=5)
+svglite("beluga/results_within_range/beluga_GF_Map_updated_rangeclip_PCA_legend.svg", width=6, height=5)
 plot((pca$x[, 1:2]), xlim = xrng, ylim = yrng, 
      pch = ".", cex = 4, col = rgb(r, g, b, max = 255),
      asp = 1)
@@ -319,31 +357,33 @@ jit <- 0.0015
 text(pca$rotation[vec, 1]/scal + jit * sign(pca$rotation[vec, 1]), pca$rotation[vec, 2]/scal + jit * sign(pca$rotation[vec, 2]), labels = vec)
 dev.off()
 
-
-"The colors represent genetic variation (allelic composition) as predicted based on the modeled relationships with environmental and spatial variables. Similar colors are predicted to be more similar genetically."
+#From vignette:
+#"The colors represent genetic variation (allelic composition) as predicted based on the modeled relationships with environmental and spatial variables. Similar colors are predicted to be more similar genetically."
 
 
 ##########  
 
 ##########  
 ##### Step 3: Estimate genetic offsets using future environmental data
+# replaced "future.rasters.crop" with "future.rasters.range" to make range specific
 
 ## 3.1 prepare data files
-clim.land.future <- raster::extract(future.rasters.crop, 1:ncell(future.rasters.crop), df = TRUE)
+clim.land.future <- raster::extract(future.rasters.range, 1:ncell(future.rasters.range), df = TRUE)
 clim.land.future <- na.omit(clim.land.future)
 
-# transform environmental variables
+# Transform environmental variables
 pred.future <- predict(gf, clim.land.future[,-1])
 
-# noting here that changed pred.adaptive (tutorial) to pred (here).
-# genetic offset:
+# Noting here that changed pred.adaptive (tutorial) to pred (here).
+# Genetic offset:
 genetic.offset.adaptive <- sqrt((pred.future[,1]-pred[,1])^2 + 
                                   (pred.future[,2]-pred[,2])^2 + 
                                   (pred.future[,3]-pred[,3])^2 + 
                                   (pred.future[,4]-pred[,4])^2)
 
 # Define raster properties --- the variable doesn't matter here i think
-rast.offset <- future.rasters.crop$salinity 
+# "future.rasters.range" for species range, "future.rasters.crop" for full ECA
+rast.offset <- future.rasters.range$salinity 
 
 # Assign genetic offset values (difference between future and present predictions) to raster 
 rast.offset[clim.land.future$ID] <- genetic.offset.adaptive
@@ -352,7 +392,7 @@ rast.offset[clim.land.future$ID] <- genetic.offset.adaptive
 offset.colors = colorRampPalette(c("#4575B4", "#abd9e9","#ffffbf","#fdae61","#f46d43","#a50026"))
 
 # Quick plot!
-pdf("bowhead_RWmap_GF_GeneticOffset_RCP85_2100.pdf")
+pdf("bowhead/results_within_range/bowhead_RWmap_GF_GeneticOffset_RCP85_2100_rangeclip.pdf")
 plot(rast.offset, col=offset.colors(200))
 points(pres.clim.points$Lon, pres.clim.points$Lat)
 dev.off()
@@ -367,8 +407,17 @@ map_outline <- crop(map_outline, y=crop.extent) %>% fortify()
 # create SpatRaster to work with tidyterra
 rast.offset.spat <- rast(rast.offset)
 
+##### To add crop to species range at this stage
+# without rgdal, use "sf::read_sf" to load shape file
+#species <- read_sf('C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/maps/range_maps/redlist_species_data_beluga/data_0.shp')
+
+#rast.offset.clip <- mask(rast.offset, species)
+#rast.offset.clip.spat <- rast(rast.offset.clip)
+
+#####
+
 # plot and save as svg
-svglite("bowhead/bowhead_GF_GeneticOffset_RCP60_2100_landmap_sites_step_updated2_shape.svg", width=6, height=6)
+svglite("narwhal/results_within_range/narwhal_GF_GeneticOffset_RCP85_2100_landmap_sites_step_updated2_shape_rangeclip.svg", width=6, height=6)
 ggplot()+
   geom_spatraster(data=rast.offset.spat)+
   geom_polygon(data=map_outline, aes(x=long, y=lat, group=group), fill="gray80", colour="gray50", linewidth=0.2)+
@@ -378,15 +427,15 @@ ggplot()+
   #scale_shape_manual(values=c(15, 8, 17, 18, 12, 16))+ 
   
   # narwhal points
-  #geom_point(data=sites, aes(x=est_longitude, y=est_latitude, shape=Population),size=2,colour="black")+
- # scale_shape_manual(values=c(17, 15, 18))+
+  geom_point(data=sites, aes(x=est_longitude, y=est_latitude, shape=Population),size=2,colour="black")+
+  scale_shape_manual(values=c(17, 15, 18))+
   
   # bowhead points
-  geom_point(data=sites, aes(x=est_longitude, y=est_latitude, shape=Population),size=2,colour="black")+
-  scale_shape_manual(values=c(16))+
+  #geom_point(data=sites, aes(x=est_longitude, y=est_latitude, shape=Population),size=2,colour="black")+
+  #scale_shape_manual(values=c(16))+
   
   #scale_fill_gradientn(colors=offset.colors(100))+
-  scale_fill_stepsn(n.breaks = 20, colours = offset.colors(12))+#, limits=c(0,0.11))+
+  scale_fill_stepsn(n.breaks = 20, colours = offset.colors(12),  na.value="white")+ #limits=c(0,0.11))+
   scale_x_continuous(expand=c(0,0), breaks=c(-100,-80,-60)) +
   scale_y_continuous(expand=c(0,0), breaks=c(50,60,70,80)) +
   #scale_x_continuous(expand=c(0,0), breaks=c(-105,-50)) +
@@ -396,26 +445,32 @@ ggplot()+
   labs(fill="Genetic offset")+
   theme(panel.border = element_rect(color = "black", fill = NA, size = 0.5),
         plot.title = element_text(hjust = 0.5))+
-  annotation_scale(height=unit(0.15, "cm"), location="tr", aes(width_hint=0.15), text_cex=0.8)+
+ # annotation_scale(height=unit(0.15, "cm"), location="tr", aes(width_hint=0.15), text_cex=0.8)+
   annotation_north_arrow(height = unit(1, "cm"),width = unit(1, "cm"),
                          location = "tr", which_north = "true",
-                         pad_x = unit(0.12, "cm"), pad_y = unit(0.6, "cm"),
+                         pad_x = unit(0.12, "cm"), pad_y = unit(0.3, "cm"), #pad_y unit 0.6 if including scale bar
                          style = ggspatial::north_arrow_fancy_orienteering())+
   theme(text=element_text(size=15))+
   theme(legend.title = element_text( size=12), legend.text=element_text(size=12))
 dev.off()
 
 
-######## extract gradient forest values
-# save the rast.offset for later too
-raster::writeRaster(rast.offset, "narwhal/raster.offset.RCP60.2100.narwhal.easternCanada.tif")
 
-# can import raster back in
+# Save the rast.offset for later too
+raster::writeRaster(rast.offset, "beluga/results_within_range/raster.offset.RCP45.2100.beluga.easternCanada.RANGECLIP.tif")
+
+# Can import raster back in like this
 #rast.offset.test <- raster("raster.offset.RCP85.2100.narwhal.easternCanada.tif")
 
-# treat rast.offset as a raster to extract values by site.
+
+##########  
+
+##########  
+##### Step 4: Creating box plots - extract genetic offset values
+
+# Treat rast.offset as a raster to extract values by site.
 # load site locations
-sites <- read.csv("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current-June2024/climate_data/site_locations.csv") %>% subset(Narwhal > 0) #%>% subset(Location_abbrev != "GH")
+sites <- read.csv("C:/Users/eveli/Dropbox/Whales with Garroway/01-arctic_whales/gradient_forest_current/climate_data/site_locations.csv") %>% subset(Narwhal > 0) #%>% subset(Location_abbrev != "GH")
 
 x <- sites$est_longitude
 y <- sites$est_latitude
@@ -428,25 +483,22 @@ pts <- cbind(x, y) %>% as_tibble()
 pts <- SpatialPoints(pts, proj4string = CRS("+proj=longlat +datum=WGS84"))
 projection(pts)==projection(rast.offset) # make sure projection matches
 
-# create dataframe to store extracted data
+# Create dataframe to store extracted data
 offset.data <- tibble(ID = 1:nrow(pts@coords), Lon = pts$x, Lat = pts$y)
 
-# extract for each layer (buffer is in meters)
+# Extract for each layer (buffer is in meters) 
 # try fun=NULL to avoid summarizing
 store_data = list()
 for (i in 1:nlayers(rast.offset)){
   store_data[[i]] = raster::extract(rast.offset[[i]], pts, buffer=100000, fun=NULL)
 }
+# Now have genetic offset values for 100km for each site.
 
+# Code below for narwhal, bowhead, belugs separately 
 
-# ok now have genetic offset values for 100km for each site.
-# want to create new dataframe. maybe column for each site, row for each genetic offset value?
-
-#narwhal
-#####
-##### narwhal
+##### Narwhal
 # 1=AB, 2=BI, 3=CR, 4=GF, 5=IG, 6=PG, 7=PB, 8=PI, 9=RB, 10=RE, 11=SB.
-# make colnames MID, NOR, RB for subgroups
+# make colnames CHA, BI, NHB for subgroups
 
 AB <- as.data.frame(store_data[[1]][[1]])
 colnames(AB) <- "AB"
@@ -497,22 +549,17 @@ narwhal_offset <- meltData %>%
   theme(legend.position="none", panel.grid.major.x=element_blank())+
   xlab("Population")
 
-
 narwhal_offset
 #write.csv(meltData, "narwhal/narwhal_meltdata_for_boxplot_RCP85_2100.csv")
-ggsave("narwhal/narwhal_boxplot_RCP60_2100_bypop.svg", width=3, height=4, dpi=1000)
+ggsave("narwhal/results_within_range/narwhal_boxplot_RCP85_2100_bypop_rangeclip.svg", width=3, height=4, dpi=1000)
 
 # if summary doesn't work use CHApop %>% mutate(new=mean(c(GF, RE, SB), na.rm=T))
 #ggsave("narwhal/narwhal_offset_boxplot_RCP85_2100_bypop_yellow.svg", width=2.5, height=4, dpi=900)
 
+save.image("narwhal_K3_GF_snps_scan_4env_ntree500_nbin301_offset_fullpipeRCP85_2100_rangeclip.RData")
 
-#save.image("narwhal_K3_GF_snps_scan_4env_ntree500_nbin301_offset_fullpipeRCP60_2100.RData")
 
-#####
-
-#bowhead
-######
-##### bowhead
+##### Bowhead
 # 1=AB, 2=CD, 3=CR, 4=CH, 5=GH, 6=HB, 7=IQ, 8=PG, 9=PB, 10=PI, 11=RI, 12=RB, 13=SB, 14=WB, 15=DIS 
 
 # make colnames MID, NOR, RB for subgroups
@@ -548,7 +595,7 @@ colnames(WB) <- "WB"
 DIS <- as.data.frame(store_data[[1]][[15]])
 colnames(DIS) <- "DIS"
 
-# combining data frames with diff. lengths will add a lot of NAs but is fine cuz we just want raw values anyway
+# combining data frames with diff. lengths will add a lot of NAs but is fine since we  want raw values 
 
 # 1=AB, 2=CD, 3=CR, 4=CH, 5=GH, 6=HB, 7=IQ, 8=PG, 9=PB, 10=PI, 11=RI, 12=RB, 13=SB, 14=WB, 15=DIS 
 
@@ -570,18 +617,17 @@ bowhead_offset <- meltData %>%
   theme(legend.position="none", panel.grid.major.x=element_blank())+
   xlab("Population")
 
-
 bowhead_offset
 #write.csv(meltData, "bowhead/bowhead_meltdata_for_boxplot_RCP85_2100.csv")
-ggsave("bowhead/bowhead_boxplot_RCP60_2100_bypop.svg", width=3, height=4, dpi=1000)
+ggsave("bowhead/bowhead_boxplot_RCP45_2100_bypop.svg", width=3, height=4, dpi=1000)
 # combined %>% mutate(new=mean(c(AB, CD, CR, CH, GH, HB, IQ, PG, PB, PI, RI, RB, SB, WB, DIS), na.rm=T))
 #ggsave("bowhead/bowhead_offset_boxplot_RCP85_2100_bypop_lighterblue.svg", width=1.7, height=4, dpi=900)
 
-#save.image("bowhead_RWmap_GF_snps_ntree100_nbin601_offset_fullpipeRCP60_2100.RData")
+save.image("bowhead_RWmap_GF_snps_ntree100_nbin601_offset_fullpipeRCP45_2100.RData")
 
-#########
-# beluga:
-####################### part from Claudio (lines 586-757):
+
+##### Beluga:
+####################### part from Claudio (lines 632-803):
 #####
 # 1=CS (1), 2=EHA (2), 3=EHB (3, 6-7), 4=LWR (4-5), 5=HB (8), 6=Iqaluit (9), 7=JB (10-12),
 #8=LanseAuxLoup (13), 9=SL (14-31), 10=UB (32-33), 11=WHB (34)
@@ -757,7 +803,7 @@ WHB$site <- "WHB"
 colnames(WHB)[1] <- "data"
 
 #######################################
-# combine
+# Combine so it's by population instead of sampling site
 EHApop <- rbind.fill(EHA)
 EHApop$pop <- "EHA"
 
@@ -780,7 +826,7 @@ combined <- rbind.fill(EHApop, HBpop, LWRpop, CSpop, JBpop, SLpop)
 meltData <- melt(combined)
 boxplot(data=meltData, value~pop)
 
-################ box plots aesthetics
+# box plot
 beluga_offset <- meltData %>%
   mutate(pop = fct_reorder(pop, value, .fun="mean")) %>%
   ggplot(aes(x=pop, y=value, fill=pop)) + 
@@ -793,15 +839,14 @@ beluga_offset <- meltData %>%
 
 beluga_offset
 
-ggsave("beluga/beluga_K6_boxplot_RCP60_2100_bypop.svg", width=3, height=4, dpi=1000)
+ggsave("beluga/results_within_range/beluga_K6_boxplot_RCP45_2100_bypop_rangeclip.svg", width=3, height=4, dpi=1000)
 
 #write.csv(meltData, "beluga/beluga_K4_5pop_meltdata_for_boxplot_RCP85_2100.csv")
-
 #ggsave("beluga/beluga_K4_offset_boxplot_RCP85_2100_bypop_purple.svg", width=3.5, height=4, dpi=900)
 
 
 ######
-## all boxplots together in one
+## all boxplots together in one -- did not end up using this in the end, but leaving here in case useful later. tried two different ways (not facet and facet)
 
 beluga_boxdata <- read.csv("beluga/beluga_K4_5pop_meltdata_for_boxplot_RCP85_2100.csv")
 beluga_boxdata <- beluga_boxdata %>% select(pop, variable, value)
